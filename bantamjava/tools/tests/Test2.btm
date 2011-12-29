@@ -1,0 +1,52 @@
+class Main {
+    void main() {
+    
+    int i = 1;
+    int x = ((5)); //declaration expr, const int expr, (expr)
+    String s = "Hello"; //const string expr
+    boolean bool = false; //const boolean expr
+    x = 6;	//assign expr
+	TextIO io = new TextIO(); //new expr
+	io instanceof TextIO;
+	x = 4 + 3 * 7;		//binary arithmetic plus expression
+	x = 4 - 3;		//binary arithmetic minus expression
+	x = 4 * 3;		//binary arithmetic times expression
+	x = 4 / 3;		//binary arithmetic divide expression
+	x = 4 % 3;		//binary arithmetic modulus expression
+	
+	s = (String)(x);	//cast expression
+
+	x = -x;			//unary neg expr
+	bool = !bool;
+	i = -i;
+	
+	if(bool)		//ifstmt test, have not tested with a block statement and does not
+		bool = true;	//seem to work if i put if((bool))
+	else
+		bool = false;
+		
+	while(x) {		//whilestmt test, block statement test
+		bool = true;
+		int block = 10;
+	}
+	
+	putString();		//dispatchExpr test
+	x. myMethod();
+	boolean bool = i==8;
+	bool = i != 9;
+	if(x==2)
+		if(x)
+			x=5;
+		else
+			y=5;
+		
+	
+	return;
+	
+    }
+    
+    void myMethod(int x) {return;}
+    void methodTwo(int x, int y) {return;}
+}
+
+//multiple binary logical comparisons, comparison expressions

@@ -1,0 +1,260 @@
+/** A program for representing Java-like Vectors
+  * Implemented using linked-lists
+  * @author: Marc Corliss 
+  * */
+class Vector {
+    /** TextIO object for reading/writing */
+    TextIO io = new TextIO();
+    /** First element in vector */
+    VectorElement first;
+    /** Last element in vector */
+    VectorElement last;
+    /** Size of vector */
+    int size = 0;
+
+    /** Reports an error and exits
+      * Note: should only be used internally within the vector class
+      * @param message error message
+      * */
+    void error(String message) {
+	io.putString("Vector error: ").putString(message).putString("\n");
+	(new Sys()).exit(1);
+	return;
+    }
+
+    /** Check whether an index is valid, gives an error and exits if not
+      * Note: should only be used internally within the vector class
+      * @param i index to check
+      * @param method name of the calling method for error reporting
+      * @param isSizeIncluded boolean indicating whether size is a valid index
+      * */
+    void checkIndex(int i, String method, boolean isSizeIncluded) {
+	if (!isSizeIncluded) {
+	    if (i < 0 || i >= size) {
+		io.putString("Bad index '").putInt(i).putString("'\n");
+		io.putString("Index must be >= 0 and < size '");
+		io.putInt(size).putString("'\n");
+		error("index out of bounds in method ".concat(method));
+	    }
+	}
+	else {
+	    if (i < 0 || i > size) {
+		io.putString("Bad index '").putInt(i).putString("'\n");
+		io.putString("Index must be >= 0 and <= size '");
+		io.putInt(size).putString("'\n");
+		error("index out of bounds in method ".concat(method));
+	    }
+	}
+
+	return;
+    }
+
+    /** Get the current size of the vector
+      * @return current size of the vector
+      * */
+    int size() {
+	return size;
+    }
+
+    /** Returns whether this vector contains a specified object
+      * @param o object to check if on vector
+      * @return boolean indicating whether object is on the vector (true) or not (false)
+      * */
+    boolean contains(Object o) {
+	VectorElement e = first;
+	boolean found = false;
+
+	while (e != null && !found) {
+	    if (e.getElement() == o)
+		found = true; 
+	    e = e.getNext();
+	}
+
+	return found;
+    }
+
+    /** Add an object to the vector
+      * @param o object to add
+      * @return this vector
+      * */
+    Vector addElement(Object o) {
+	VectorElement newLast = (new VectorElement()).setElement(o);
+	if (first == null)
+	    first = newLast;
+	else
+	    last.setNext(newLast);
+	last = newLast;
+	size = size + 1;
+
+	return this;
+    }
+
+    /** Remove first occurrence of an object
+      * @param o object to remove
+      * @return this vector
+      * */
+    Vector removeElement(Object o) {
+	VectorElement e = first;
+	VectorElement prev = null;
+	boolean removed = false;
+
+	while (e != null && !removed) {
+	    if (e.getElement() == o) {
+		if (prev == null) 
+		    first = first.getNext();
+		else if (e == last)
+		    prev.setNext(null);
+		else 
+		    prev.setNext(e.getNext());
+		if (e == last)
+		    last = prev;
+		removed = true;
+		size = size - 1;
+	    }
+	    prev = e;
+	    e = e.getNext();
+	}
+	
+	if (!removed)
+	    error("element not found in vector");
+
+	return this;
+    }
+
+    /** Get the ith element
+      * @param i index of the element to get
+      * @return the object at the ith position
+      * */
+    Object elementAt(int i) {
+	VectorElement e = first;
+
+	checkIndex(i, "elementAt", false);
+	int j = 0;
+	while (j < i) {
+	    e = e.getNext();
+	    j = j + 1;
+	}
+
+	return e.getElement();
+    }
+    
+    /** Add an element at the ith position
+      * @param o object to add to the vector
+      * @param i index of position where element will be added
+      * @return this vector
+      * */
+    Vector addElementAt(Object o, int i) {
+	checkIndex(i, "addElementAt", true);
+	if (i == size)
+	    addElement(o); 
+	else {
+	    VectorElement newElement = (new VectorElement()).setElement(o);
+	    VectorElement e = first;
+	    VectorElement prev = null;
+
+	    int j = 0;
+	    while (j < i) {
+		prev = e;
+		e = e.getNext();
+		j = j + 1;
+	    }
+
+	    if (prev == null)
+		first = newElement;
+	    else 
+		prev.setNext(newElement);
+	    
+	    if (size == 0) 
+		last = first; 
+	    
+	    newElement.setNext(e);
+	    size = size + 1;
+	}
+
+	return this;
+    }
+
+    /** Set the ith element
+      * @param o object used to set the ith element
+      * @param i index of the element to set
+      * @return this vector
+      * */
+    Vector setElementAt(Object o, int i) {
+	checkIndex(i, "setElementAt", false);
+	addElementAt(o, i);
+	removeElementAt(i+1);
+
+	return this;
+    }
+
+    /** Remove the ith element
+      * @param i index of the element to remove
+      * @return this vector
+      * */
+    Vector removeElementAt(int i) {
+	checkIndex(i, "removeElementAt", false);
+
+	VectorElement e = first;
+	VectorElement prev = null;
+	int j = 0;
+	
+	while (j < i) {
+	    prev = e;
+	    e = e.getNext();
+	    j = j + 1;
+	}
+	
+	if (prev == null)
+	    first = first.getNext();
+	else if (e == last)
+	    prev.setNext(null);
+	else 
+	    prev.setNext(e.getNext());
+	if (e == last)
+	    last = prev;
+	size = size - 1;
+
+	return this;
+    }
+}
+
+/** Class for representing an element in a vector 
+  * Used by Vector class for creating linked lists 
+  * of elements.
+  * */
+class VectorElement {
+    /** Element object */
+    Object element;
+    /** Next pointer */
+    VectorElement next;
+
+    /** Get the element object
+      * @return element
+      * */
+    Object getElement() {
+	return element;
+    }
+
+    /** Set the element object
+      * @param o object used to the set the element
+      * */
+    VectorElement setElement(Object o) {
+	element = o;
+	return this;
+    }
+
+    /** Get the next vector element
+      * @return next vector element
+      * */
+    VectorElement getNext() {
+	return next;
+    }
+
+    /** Set the next vector element
+      * @param ve vector element used to set the next pointer
+      * */
+    VectorElement setNext(VectorElement ve) {
+	next = ve;
+	return this;
+    }
+}

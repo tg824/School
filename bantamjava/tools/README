@@ -1,0 +1,6 @@
+This is my implementation of the bantam java compiler.  It was made during my compiler construction class in school.  
+We didn't have time to get to code generation but lexing, parsing, and semantic analysis are all complete.  I'd really
+like to come back to this and see if I could finish code generation on my own.
+
+
+

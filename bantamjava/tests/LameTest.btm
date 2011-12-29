@@ -1,0 +1,22 @@
+class Main
+{
+	void main()
+	{
+		int x = 6;
+		boolean y = true;
+		x = -6;
+		boolean b1 = false;
+		 y = x ==7;
+		y = x == 4;
+		
+		y = x > 4;
+		y = x >= 4;
+		y = x < 4;
+		y = x <= 4;
+		y = x != 4;
+		boolean z  = y && y;
+		if(x > 5)
+			x = 5;
+		return;
+	}
+}

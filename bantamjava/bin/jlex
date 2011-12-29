@@ -1,0 +1,3 @@
+#!/bin/sh
+PROJPATH=/usr/local/bantamjava
+java -cp $PROJPATH/lib JLex.Main $*

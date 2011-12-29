@@ -1,0 +1,86 @@
+class Main
+{
+	int x;
+	boolean bewlean;
+	void main()
+	{
+	
+		//if its an instance of an object, look it up in the class heirarchy tree
+		//instanceof expression, 
+		//casting (no primitive to object, no object to primitive, no child to parent)
+		//clean up class heirarchy tree building, cycle checking
+		//some scope issues
+		
+		int x = 0;
+		int i = x;
+		int y = 7;	
+		String s = "Hello";
+		String s1 = s;
+		Animal a1 = new Animal();
+		int str = a1.getStrength();
+		a1.changeStrength(5);
+		Animal a2 = a1;
+		x=8;
+		x = x/y;
+		int x2 = 5+2;
+		y=y*2;
+		y=y%x;
+		x = 9;
+		boolean b1 = false;
+		boolean b2 = true;
+//		boolean b5 = b1 == b2;
+		boolean b7 = x == y;
+//		boolean b8 = x != y;
+//		boolean b9 = x > y;
+		if(x == 5)
+		{
+			//int y = x;
+			//int z = 10;
+		}
+		/*while(x < 7)
+		{
+			int b = 6;
+			boolean blarg = false;
+		}
+		Object obj = new Object();
+		int y = 7;
+	//	boolean bool = x == 7; 
+	//	bool = i != 9;*/
+	//	i = i >= 5;
+	//	i = i > 9;
+	//	i = i < 9;
+	//	i = i <= 9;
+		
+		boolean an = true;
+		boolean na = an;
+		return;
+	}
+	
+	Animal method3()
+	{
+		Animal animal = new Animal();
+		int x = 6;
+		return new Animal();
+	}
+	
+	int method1(String args)
+	{
+		int z1 = 7;
+		return z1;
+	}
+	Bat method4()
+	{
+		Animal a1 = new Animal();
+		return (Bat)(a1);
+	}
+		
+	boolean method2()
+	{
+		Animal a1=new Animal();
+		int x = 5;
+		boolean bool = false;
+		return bool;
+	}
+	
+	//Can set y = to x, while x is defined in the scope of main only
+}

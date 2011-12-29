@@ -1,0 +1,12 @@
+//alalalallllalalal
+/**/
+/* comments comments coments
+
+*/
+
+class Main {
+    void main() {
+	(new TextIO()).putString("Hello, World!\n\"");
+	return;
+    }
+}	

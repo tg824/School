@@ -1,0 +1,186 @@
+/* Bantam Java Compiler and Language Toolset.
+
+   Copyright (C) 2009 by Marc Corliss (corliss@hws.edu) and 
+                         David Furcy (furcyd@uwosh.edu) and
+                         E Christopher Lewis (lewis@vmware.com).
+   ALL RIGHTS RESERVED.
+
+   The Bantam Java toolset is distributed under the following 
+   conditions:
+
+     You may make copies of the toolset for your own use and 
+     modify those copies.
+
+     All copies of the toolset must retain the author names and 
+     copyright notice.
+
+     You may not sell the toolset or distribute it in 
+     conjunction with a commerical product or service without 
+     the expressed written consent of the authors.
+
+   THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS 
+   OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE 
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
+   PARTICULAR PURPOSE. 
+*/
+
+/* Some modifications to this code were made by David Furcy */
+
+options {
+  JAVA_UNICODE_ESCAPE = true;
+}
+
+PARSER_BEGIN(Lexer)
+  package lexer;
+  import ast.*;
+  import util.*;
+  import java.util.Vector;
+
+  /** A class for performing lexical analysis */
+  public class Lexer {
+      /** Maximum string size allowed */
+      public static final int MAX_STRING_SIZE = 5000;
+      /** Is debugging enabled? */
+      private static boolean debug = false;
+      /** Filenames of source files */
+      private static String[] filenames = null;
+      /** Input streams of source files */
+      private static java.io.FileInputStream[] fileReaders = null;
+      /** Current file number (index into filenames and fileReaders) */
+      private static int fileCnt = 0;
+
+      /** Lexer constructor 
+        * @param filenames array of filenames for the source files
+	* @param debug flag indicating whether debugging is enabled
+	* */
+      public Lexer(String[] filenames, boolean debug) {
+	  // set debugging flag
+	  this.debug = debug;
+
+	  // initialize filenames field to parameter filenames
+	  // used later for finding the name of the current file
+	  this.filenames = filenames;
+	  
+	  // check that there is at least one specified filename
+	  if (filenames.length == 0)
+	      throw new RuntimeException("Must specify at least one filename to scan");
+
+	  initFiles(/*first time?*/true);
+      }
+
+      /** Initialize (or reinitialize) file readers
+        * @param firstTime flag indicating whether this is the first time through
+	* */ 
+      private void initFiles(boolean firstTime) {
+      	  // must initialize readers for each file (FileInputStream)
+	  fileReaders = new java.io.FileInputStream[filenames.length];
+	  for (int i = 0; i < filenames.length; i++) {
+	      // try...catch checks if file is found
+	      try {
+		  // create the ith file reader
+		  fileReaders[i] = new java.io.FileInputStream(filenames[i]);
+	      }
+	      catch(java.io.FileNotFoundException e) {
+		  // if file not found then report an error and exit
+		  System.err.println("Error: file '" + filenames[i] + "' not found");
+		  System.exit(1);
+	      }
+	  }
+
+	  if (firstTime) {
+	      try { jj_input_stream = new JavaCharStream(fileReaders[0], null, 1, 1); }
+	      catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
+	      token_source = new LexerTokenManager(jj_input_stream);
+	  }
+	  else
+	      jj_input_stream.ReInit(fileReaders[0], 1, 1);
+      }
+
+      /** Scan the tokens -- stops if lexical errors found
+        * */
+      public void scan() throws ParseException {
+	  for (fileCnt = 0; fileCnt < fileReaders.length; fileCnt++) {
+	      for (token = token_source.getNextToken(); token != null && token.kind != EOF; 
+		   token = token_source.getNextToken()) {
+		  // all the work done in the rules below
+	      }
+	      // move to next file
+	      if (fileCnt < fileReaders.length - 1)
+		  jj_input_stream.ReInit(fileReaders[fileCnt+1], 1, 1);
+	  }
+      }
+
+      /** Print the tokens (called when using '-sl' command-line option)
+        * (note: not the best approach here -- if '-sl' is set then we 
+        * scan program files twice)
+        * */
+      public void printTokens() throws ParseException {
+	  // reinitialize files
+	  initFiles(/*first time?*/false);
+
+	  for (fileCnt = 0; fileCnt < fileReaders.length; fileCnt++) {
+	      System.out.println("# " + filenames[fileCnt]);
+	      for (token = token_source.getNextToken(); token != null && token.kind != EOF; 
+		   token = token_source.getNextToken()) {
+		  System.out.println("# line " + token.beginLine);
+		  if (token.kind == ID)
+		      System.out.println("<ID, " + token.image + ">");
+		  else if (token.kind == INT_CONST)
+		      System.out.println("<INT_CONST, " + token.image + ">");
+		  else if (token.kind == BOOLEAN_CONST)
+		      System.out.println("<BOOLEAN_CONST, " + token.image + ">");
+		  else if (token.kind == STRING_CONST)
+		      System.out.println("<STRING_CONST, " + token.image + ">");
+		  else
+		      System.out.println("<" + token.image.toUpperCase() + ", >");
+	      }
+
+	      // move to next file
+	      if (fileCnt < fileReaders.length - 1)
+		  jj_input_stream.ReInit(fileReaders[fileCnt+1], 1, 1);
+	  }
+
+	  System.out.println("# line " + token.beginLine);
+	  System.out.println("<EOF, >");
+      }
+
+      /** Get the filename of the file currently being scanned
+        * */
+      public static String getCurrFilename() {
+	  return filenames[fileCnt];
+      }
+  }
+PARSER_END(Lexer)
+
+TOKEN_MGR_DECLS :
+{
+    // Use this for error handling
+    private static ErrorHandler errorHandler = new ErrorHandler();
+}
+
+/* add lexer rules below... */
+
+TOKEN : /* KEYWORDS and SPECIAL SYMBOLS */
+{
+  < CLASS: "class" >
+}
+
+TOKEN : /* CONSTANTS - FIXME: broken, only match "Foo", "Goo", or "Zoo" */
+{
+  < INT_CONST: "Foo" >
+|
+  < BOOLEAN_CONST: "Goo" >
+|
+  < STRING_CONST: "Zoo" >
+}
+
+TOKEN : /* IDs - FIXME: broken, only match "Boo" */
+{
+  < ID: "Boo" >
+}
+
+<*>
+TOKEN : /* EOF */
+{
+  <EOF> { errorHandler.checkErrors(); }
+}

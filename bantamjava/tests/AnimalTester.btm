@@ -1,0 +1,7 @@
+class AnimalTester extends Animal{
+	void main()
+	{
+		Animal a1 = new Animal();
+		return;
+	}
+}

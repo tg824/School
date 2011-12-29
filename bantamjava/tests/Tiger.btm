@@ -1,0 +1,4 @@
+class Tiger extends Animal{
+	int x;
+	int tigerStrength = strength*2;
+}

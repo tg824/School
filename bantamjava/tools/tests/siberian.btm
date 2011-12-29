@@ -1,0 +1,4 @@
+class Siberian extends Tiger{
+	int x;
+	int tigerStrength = strength*2;
+}

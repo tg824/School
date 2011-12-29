@@ -1,0 +1,17 @@
+class Animal{
+	int numLegs = 4;
+	boolean canFly = true;
+	Animal mate = new Animal();
+	int strength = (numLegs*10)+50;
+	
+	void changeStrength(int newStrength)
+	{
+		strength = newStrength;
+		return;
+	}
+	
+	int getStrength()
+	{
+		return strength;
+	}
+}

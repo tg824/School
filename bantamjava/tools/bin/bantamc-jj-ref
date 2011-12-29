@@ -1,0 +1,3 @@
+#!/bin/sh
+PROJPATH=/usr/local/bantamjava
+java -jar $PROJPATH/lib/bantamc-jj-ref.jar $*

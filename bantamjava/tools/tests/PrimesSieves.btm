@@ -1,0 +1,55 @@
+/** A class for finding primes from 2 to n using the Sieve
+  * of Eratosthenes algorithm.
+  * */
+class Main {
+    // main() method
+    void main() {
+	// io object
+	TextIO io = new TextIO();
+	// Vector indicating which numbers are primes
+	// (true means prime, false means non-prime)
+	Vector primes = new Vector();
+	// n is the size of the vector, read from the user
+	int n = 0;
+	  
+	// some error checking, n must be >= 2
+	while (n < 2) {
+	    // prompt the user for n and read it in
+	    n = io.putString("Enter a number >= 2: ").getInt();
+	    // if not >= 2, print error message
+	    if (n < 2)
+		io.putString("Error: input < 2\n");
+	}
+
+	// initialize all elements to true, at the 
+	// beginning all elements are considered prime
+	int i = 0;
+	while (i <= n) {
+            primes.addElement(new Boolean().init(true));
+	    i = i + 1;
+	}
+
+	// loop from 2 to n checking if numbers are prime]
+	i = 2;
+	while (i <= n) {
+	    // get ith element
+	    boolean b = ((Boolean)(primes.elementAt(i))).booleanValue();
+            // if primes.elementAt(i) is true, then found a prime
+            if (b) {
+		// print out prime (i.e., index of the array)
+		io.putInt(i).putString("\n");
+		// loop from 2*i to n, crossing off multiples of this
+		// prime (i.e., setting elements in the array to false)
+		int j = i * 2;
+		while (j <= n) {
+		    primes.setElementAt((new Boolean()).init(false), j);
+		    j = j + i;
+		}
+            }
+
+	    i = i + 1;
+	}
+
+	return;
+    }
+}

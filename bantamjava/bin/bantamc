@@ -1,0 +1,2 @@
+#!/bin/sh
+java -classpath /usr/local/bantamjava/lib:/usr/local/bantamjava/lib/java-cup.jar:/usr/local/bantamjava/src/bantam:/usr/local/bantamjava/src/bantam Main $*

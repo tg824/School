@@ -1,0 +1,3 @@
+class Bat extends Animal{
+	boolean hearing = true;
+	}
